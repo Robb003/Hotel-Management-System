@@ -26,6 +26,10 @@ exports.createRoom = async(req, res)=>{
             message: "room created succefully",
             room,
         });
+        // SOCKET TRIGGER: Tell everyone a new room was added
+        const io = req.app.get("io");
+        io.emit("roomCreated", room); 
+
     } catch(error){
         res.status(500).json({message: error.message});
     }
@@ -38,6 +42,25 @@ exports.getAllRooms = async(req, res)=>{
             message: "rooms fetched successfully",
             rooms,
         });
+    } catch(error){
+        res.status(500).json({message: error.message});
+    }
+};
+
+exports.updateRoom = async(req, res)=>{
+    try {
+        const room = await Room.findByIdAndUpdate(req.params.id, req.body,{new: true});
+        if(room){
+            return res.status(404).json({message: "room not found"});
+        };
+        res.status(200).json({
+            message: "room updated succefully",
+            room,
+        });
+        // SOCKET TRIGGER: Tell everyone a room was updated
+        const io = req.app.get("io");
+        io.emit("roomUpdated", room); 
+
     } catch(error){
         res.status(500).json({message: error.message});
     }
@@ -57,6 +80,11 @@ exports.deleteRoom = async(req, res)=>{
             message: "room deleted successfully",
             room,
         });
+
+        // SOCKET TRIGGER: Tell everyone a room was deleted
+        const io = req.app.get("io");
+        io.emit("roomDeleted", room); 
+
     } catch(error){
         res.status(500).json({message: error.message});
     }
