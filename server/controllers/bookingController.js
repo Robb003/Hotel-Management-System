@@ -88,12 +88,17 @@ exports.acceptBooking = async (req, res) => {
         };
 
         //get customers phonenumber
-        const phone =  booking.user.phoneNumber
+        const phone =  booking.user?.phoneNumber;
 
+        if (!phone) {
+            return res.status(400).json({
+                message: "User has no phone number"
+            });
+        }
         //send sms
         await sendMessage(
             phone,
-            `Hello${booking.user.name}, Your booking has been accepted.`
+            `Hello ${booking.user.name}, Your booking has been accepted.`
         );
         res.status(200).json({
             message: "Booking accepted and sms sent",

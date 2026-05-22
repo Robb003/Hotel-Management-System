@@ -11,4 +11,6 @@ router.put("/:id/reject", protect, authorize(["admin"]), rejectBooking);
 router.put("/:id/checkin", protect, authorize(["receptionist"]), checkIn);
 router.put("/:id/checkout", protect, authorize(["receptionist"]), checkOut);
 
+
+
 module.exports = router;
