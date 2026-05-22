@@ -5,7 +5,7 @@ const cors = require("cors");
 const multer = require("multer");
 const connectDB = require("./config/db");
 const {Server} = require("socket.io");
-const Room = require("./models/Room"); // Ensure Room model is imported
+const Room = require("./models/Room"); //  Room model is imported
 
 const app = express();
 const server = http.createServer(app);
