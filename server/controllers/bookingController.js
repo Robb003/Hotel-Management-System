@@ -1,8 +1,9 @@
 const Booking = require("../models/Booking");
 const Room = require("../models/Room");
+const sendMessage = require("../services/smsServices");
 
 // STEP 1: Customer creates a fresh Booking request
-exports.CreateBooking = async (req, res) => {
+exports.createBooking = async (req, res) => {
     try {
         const { room, startDate, endDate } = req.body;
         //check if the room exist
@@ -84,10 +85,20 @@ exports.acceptBooking = async (req, res) => {
         if (room) {
             room.roomStatus = "booked";
             await room.save();
-        }
+        };
 
-        res.status(200).json({ message: "Booking accepted", booking });
+        //get customers phonenumber
+        const phone =  booking.user.phoneNumber
 
+        //send sms
+        await sendMessage(
+            phone,
+            `Hello${booking.user.name}, Your booking has been accepted.`
+        );
+        res.status(200).json({
+            message: "Booking accepted and sms sent",
+            booking
+        })
         const io = req.app.get("io");
         if (io) {
             // Tell everyone the room is booked

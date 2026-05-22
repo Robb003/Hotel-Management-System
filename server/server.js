@@ -17,7 +17,7 @@ const io = new Server(server, {
 app.set("io", io);
 
 // socket io
-require('./sockets/socketHandler')(io); 
+require('./socket/index')(io); 
 
 // images storage config
 const storage = multer.diskStorage({
@@ -65,3 +65,4 @@ app.use("/api/rooms", require("./routes/roomRoutes")(upload));
 connectDB();
 const PORT = process.env.PORT || 5000;
 server.listen(PORT, () => console.log(`Server is running on http://localhost:${PORT}`));
+
